@@ -70,18 +70,19 @@ class BookInstance(models.Model):
         help_text='Book availability',
     )
 
-    class Meta:
-        ordering = ['due_back']
-
-    def __str__(self):
-        """String for representing the Model object."""
-        return f'{self.id} ({self.book.title})'
-
     @property
     def is_overdue(self):
         if self.due_back and date.today() > self.due_back:
             return True
         return False
+
+    class Meta:
+        ordering = ['due_back']
+        permissions = (("can_mark_returned", "Set book as returned"),)   
+
+    def __str__(self):
+        """String for representing the Model object."""
+        return f'{self.id} ({self.book.title})'
 
 
 class Author(models.Model):
